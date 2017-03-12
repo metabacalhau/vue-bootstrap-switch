@@ -1,6 +1,6 @@
 # vue-bootstrap-switch
 
-> Vue Bootstrap Switch
+https://desperate-man.github.io/vue-bootstrap-switch/
 
 ## Build Setup
 
