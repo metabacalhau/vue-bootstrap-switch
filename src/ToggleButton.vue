@@ -44,11 +44,18 @@ export default {
             default: function () {
                 return false;
             }
+        },
+        animate: {
+            required: false,
+            default: function () {
+                return true;
+            }
         }
     },
     data () {
-        return  {
-            localValue: this.value
+        return {
+            localValue: this.value,
+            localAnimate: this.animate
         }
     },
     watch: {
@@ -61,14 +68,17 @@ export default {
             this.$nextTick(function () {
                 this.width();
             })
+        },
+        animate(val) {
+            this.localAnimate = val;
         }
     },
     computed: {
         css() {
             return {
                 'bootstrap-switch': true,
-                'bootstrap-switch-wrapper': true,
-                'bootstrap-switch-animate': true,
+                'bootstrap-switch-wrapper': false,
+                'bootstrap-switch-animate': this.localAnimate,
                 'bootstrap-switch-disabled': this.disabled
             }
         }
@@ -82,13 +92,17 @@ export default {
                     this.$refs.container.style.marginLeft = 0;
                 }
                 else {
-                    this.$refs.container.style.marginLeft = (-1) * this.$refs.on.offsetWidth + 'px';
+                    this.$refs.container.style.marginLeft = (-1 * this.$refs.on.offsetWidth) + 'px';
                 }
 
                 this.onChanged(this.localValue);
             }
         },
         width() {
+            const animate = this.localAnimate;
+            
+            this.localAnimate = false;
+
             this.$refs.on.style.width = 0;
             this.$refs.label.style.width = 0;
             this.$refs.off.style.width = 0;
@@ -112,12 +126,16 @@ export default {
                 this.$refs.container.style.marginLeft = 0;
             }
             else {
-                this.$refs.container.style.marginLeft = (-1) * labelWidth + 'px';
+                this.$refs.container.style.marginLeft = (-1 * labelWidth) + 'px';
             }
 
             this.$refs.label.style.width = labelWidth + 'px';
             this.$refs.container.style.width = ((handleWidth * 2) + labelWidth) + 'px';
             this.$refs.wrapper.style.width = (handleWidth + labelWidth) + 'px';
+
+            setTimeout(function () {
+                this.localAnimate = animate;
+            }.bind(this), 0.5);
         }
     },
     mounted() {
